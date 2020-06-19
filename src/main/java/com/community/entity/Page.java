@@ -1,13 +1,10 @@
 package com.community.entity;
 
-import com.sun.corba.se.impl.oa.toa.TOA;
-
 /**
  * @author stone
  * @version 1.0
  * @ClassName Page
  * @Description 分页相关
- * @date 2020/5/10 10:34
  */
 public class Page {
 
@@ -65,7 +62,7 @@ public class Page {
      * 当前页起始行
      */
     public int getOffset() {
-        return limit*(current - 1);
+        return limit * (current - 1);
     }
 
     /**
@@ -78,7 +75,7 @@ public class Page {
 
     /**
      * 获取起始页，例如当前页为3 前后分别显示两页  1 2 3 4 5
-     *  current - 2
+     * current - 2
      * 1. 当前页在边界 第一、二页
      * 2. 当前>2
      */

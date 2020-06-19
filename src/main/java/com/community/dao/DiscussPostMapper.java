@@ -22,10 +22,9 @@ public interface DiscussPostMapper {
      * @param limit：查询几条数据
      * @return
      */
-    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
+    List<DiscussPost> selectDiscussPosts(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit, @Param("orderMode") int orderMode);
 
     //@Param注解,给参数取别名
-    //如果只有一个参数，并且在<if>里使用
 
     /**
      * 查询帖子行数
@@ -33,4 +32,22 @@ public interface DiscussPostMapper {
      * @return
      */
     int selectDiscussPostRows(@Param("userId") int userId);
+
+    //发帖
+    int insertDiscussPost(DiscussPost discussPost);
+
+    // 根据id查询帖子
+    DiscussPost selectDiscussPostById(int id);
+
+    //修改评论数量 帖子的id
+    int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
+
+    //修改帖子类型
+    int updateType(@Param("id") int id, @Param("type") int type);
+
+    // 修改帖子的状态
+    int updateStatus(@Param("id") int id, @Param("status") int status);
+
+    // 更新帖子分数
+    int updateScore(@Param("id") int id, @Param("score") double score);
 }
