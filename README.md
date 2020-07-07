@@ -2,6 +2,7 @@
 类似于牛客网讨论区的互动网站，基于B/S架构，实现的功能有:
 
 **注册**：目前仅支持支持邮箱注册
+![](https://github.com/Brystone/community/blob/master/image/%E6%B3%A8%E5%86%8C.png)
 
 **用户名登陆：**
 
