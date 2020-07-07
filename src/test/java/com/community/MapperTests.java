@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -35,6 +36,9 @@ public class MapperTests {
 
     @Autowired
     private MessageMapper messageMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
     public void testSelectUser() {
@@ -130,4 +134,13 @@ public class MapperTests {
 
     }
 
+    @Test
+    public void testPassWord() {
+        String pw = "$2a$10$CpBFoWWvRzqUDiZu88oZAOoh0LMVvoZuLscUuEBnNc4Gat73Q9kum";
+        String newPw = bCryptPasswordEncoder.encode(pw);
+        // 每次加密后的密码都不一样
+//        System.out.println(newPw);
+        System.out.println(bCryptPasswordEncoder.matches("aaa", pw));
+    }
 }
+

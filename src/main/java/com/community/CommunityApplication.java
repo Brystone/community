@@ -2,10 +2,12 @@ package com.community;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
+@EnableWebSecurity // 开启security
 public class CommunityApplication {
 
     // 管理bean初始化
@@ -19,5 +21,4 @@ public class CommunityApplication {
     public static void main(String[] args) {
         SpringApplication.run(CommunityApplication.class, args);
     }
-
 }

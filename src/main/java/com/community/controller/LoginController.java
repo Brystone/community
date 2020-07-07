@@ -47,11 +47,13 @@ public class LoginController implements CommunityConstant {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    // 显示注册页面
     @RequestMapping(path = "/register", method = RequestMethod.GET)
     public String getRegisterPage() {
         return "/site/register";
     }
 
+    // 登录页面
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String getLoginPage() {
         return "/site/login";
@@ -89,6 +91,7 @@ public class LoginController implements CommunityConstant {
         return "/site/operate-result";
     }
 
+    // 验证码功能在表现层实现
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
     public void getKaptcha(HttpServletResponse response /*, HttpSession session*/) {
         // 生成验证码
@@ -124,6 +127,7 @@ public class LoginController implements CommunityConstant {
                         @CookieValue("kaptchaOwner") String kaptchaOwner) {
         // 检查验证码
         //String kaptcha = (String) session.getAttribute("kaptcha");
+
         // 从redis中取验证码
         String kaptcha = null;
         if (StringUtils.isNotBlank(kaptchaOwner)) {

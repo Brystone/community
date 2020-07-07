@@ -25,13 +25,15 @@ public class SensitiveFilter {
     // 根节点
     private TrieNode rootNode = new TrieNode();
 
-    //服务器启动时进行初始化，一次就行
+    // 服务器启动时进行初始化，一次就行
     @PostConstruct
     public void init() {
+
+        // 创建对象后编译时会自动加上 finally 关闭字节流
         try (
-                //加载到字节流
+                // 通过类加载器加载到字节流
                 InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-words.txt");
-                //字节流转化为缓冲流
+                // 字节流 --> 字符流 --> 缓冲流
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         ) {
             String keyword;
@@ -40,7 +42,6 @@ public class SensitiveFilter {
                 this.addKeyword(keyword);
             }
         } catch (IOException e) {
-            //使用logger记录错误信息
             logger.error("加载敏感词文件失败: " + e.getMessage());
         }
     }
@@ -69,7 +70,7 @@ public class SensitiveFilter {
     }
 
     /**
-     * 过滤敏感词
+     * 过滤敏感词，检索过程
      *
      * @param text 待过滤的文本
      * @return 过滤后的文本
@@ -81,7 +82,7 @@ public class SensitiveFilter {
 
         // 指针1
         TrieNode tempNode = rootNode;
-        // 指针2
+        // 指针2 指向字符串第一个字符
         int begin = 0;
         // 指针3
         int position = 0;
@@ -91,7 +92,7 @@ public class SensitiveFilter {
         while (position < text.length()) {
             char c = text.charAt(position);
 
-            // 跳过符号
+            // 跳过符号，保证算法严谨性
             if (isSymbol(c)) {
                 // 若指针1处于根节点,将此符号计入结果,让指针2向下走一步
                 if (tempNode == rootNode) {
@@ -134,16 +135,17 @@ public class SensitiveFilter {
     // 判断是否为符号
     private boolean isSymbol(Character c) {
         // 0x2E80~0x9FFF 是东亚文字范围
+        // '\n'  '-' --> false
         return !CharUtils.isAsciiAlphanumeric(c) && (c < 0x2E80 || c > 0x9FFF);
     }
 
     // 前缀树
     private class TrieNode {
 
-        // 关键词结束标识
+        // 敏感词结束标识
         private boolean isKeywordEnd = false;
 
-        // 子节点(key是下级字符,value是下级节点)
+        // 子节点有多个，用map封装  key:子节点的是哪个字符  value：类型是前缀树
         private Map<Character, TrieNode> subNodes = new HashMap<>();
 
         public boolean isKeywordEnd() {

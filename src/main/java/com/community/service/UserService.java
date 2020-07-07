@@ -3,6 +3,7 @@ package com.community.service;
 import com.community.dao.LoginTicketMapper;
 import com.community.dao.UserMapper;
 import com.community.entity.LoginTicket;
+import com.community.entity.Page;
 import com.community.entity.User;
 import com.community.util.CommunityConstant;
 import com.community.util.CommunityUtil;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -31,6 +33,9 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -88,10 +93,14 @@ public class UserService implements CommunityConstant {
         }
 
         // 注册用户
-        user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
-        user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
+//        user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
+        // 盐值固定，生成的密码固定
+//        user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
+        // 使用BCrypt
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setType(0);
         user.setStatus(0);
+        // 激活时候生成字符串 激活码
         user.setActivationCode(CommunityUtil.generateUUID());
         user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         user.setCreateTime(new Date());
@@ -114,6 +123,7 @@ public class UserService implements CommunityConstant {
         if (user.getStatus() == 1) {
             return ACTIVATION_REPEAT;
         } else if (user.getActivationCode().equals(code)) {
+            // 更新状态
             userMapper.updateStatus(userId, 1);
             clearCache(userId);
             return ACTIVATION_SUCCESS;
@@ -148,9 +158,13 @@ public class UserService implements CommunityConstant {
             return map;
         }
 
-        // 验证密码
-        password = CommunityUtil.md5(password + user.getSalt());
-        if (!user.getPassword().equals(password)) {
+         // 验证密码
+//        password = CommunityUtil.md5(password + user.getSalt());
+//        if (!user.getPassword().equals(password)) {
+//            map.put("passwordMsg", "密码不正确!");
+//            return map;
+//        }
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             map.put("passwordMsg", "密码不正确!");
             return map;
         }
@@ -171,6 +185,7 @@ public class UserService implements CommunityConstant {
         return map;
     }
 
+    // 退出后更新redis中的凭证
     public void logout(String ticket) {
 //        loginTicketMapper.updateStatus(ticket, 1);
         String redisKey = RedisKeyUtil.getTicketKey(ticket);
@@ -207,6 +222,7 @@ public class UserService implements CommunityConstant {
 
     // 2.取不到时初始化缓存数据
     private User initCache(int userId) {
+        // 从数据库中取
         User user = userMapper.selectById(userId);
         String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.opsForValue().set(redisKey, user, 3600, TimeUnit.SECONDS);
@@ -241,5 +257,4 @@ public class UserService implements CommunityConstant {
         });
         return list;
     }
-
 }

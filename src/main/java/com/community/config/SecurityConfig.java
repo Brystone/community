@@ -2,12 +2,15 @@ package com.community.config;
 
 import com.community.util.CommunityConstant;
 import com.community.util.CommunityUtil;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -97,5 +100,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
         // Security底层默认会拦截/logout请求,进行退出处理.
         // 覆盖它默认的逻辑,才能执行我们自己的退出代码.
         http.logout().logoutUrl("/securitylogout");
+    }
+
+    // 注入 BCryptPasswordEncoder 类
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+           return new BCryptPasswordEncoder();
     }
 }

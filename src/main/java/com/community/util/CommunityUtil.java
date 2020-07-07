@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class CommunityUtil {
 
-    // 生成随机字符串
+    // 生成随机字符串，作为每个用户盐值和注册时激活码
     public static String generateUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }

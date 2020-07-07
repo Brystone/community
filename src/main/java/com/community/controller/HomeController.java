@@ -9,6 +9,8 @@ import com.community.service.UserService;
 import com.community.util.CommunityConstant;
 import com.community.util.CommunityUtil;
 import com.community.util.RedisKeyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author stone
- * @version 1.0
  * @ClassName HomeController
  * @Description
- * @date 2020/5/6 22:41
+ *
  */
 
 @Controller
@@ -39,6 +39,7 @@ public class HomeController implements CommunityConstant {
     @Autowired
     LikeService likeService;
 
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page,
                                @RequestParam(name = "orderMode", defaultValue = "0") int orderMode) {
@@ -58,17 +59,16 @@ public class HomeController implements CommunityConstant {
                 User user = userService.findUserById(post.getUserId());
                 // 整个用户信息放到map里
                 map.put("user", user);
-                discussPosts.add(map);
-
 
                 long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
                 map.put("likeCount", likeCount);
+                discussPosts.add(map);
             }
         }
 
         // 传给模板
         model.addAttribute("discussPosts", discussPosts);
-        model.addAttribute("orderMode");
+        model.addAttribute("orderMode", orderMode);
         return "index";
     }
 
