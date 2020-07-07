@@ -21,7 +21,7 @@
 
 ![](https://github.com/Brystone/community/blob/master/image/%E8%AF%84%E8%AE%BA%E5%9B%9E%E5%A4%8D%E7%82%B9%E8%B5%9E.png)
 
-**通知**：当某人给自己点赞或者发私信时，会有系统通知。
+**通知** 点击消息可以看到 朋友私信和系统通知（评论、点赞、关注通知）。
 
 ![](https://github.com/Brystone/community/blob/master/image/%E9%80%9A%E7%9F%A5.png)
 
