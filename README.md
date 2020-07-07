@@ -29,7 +29,7 @@
 
 ![](https://github.com/Brystone/community/blob/master/image/%E5%8F%91%E7%A7%81%E4%BF%A1.png)
 
-![](https://github.com/Brystone/community/blob/master/image/%E7%A7%81%E4%BF%A1%E5%88%97%E8%A1%A8.png)
+![](https://github.com/Brystone/community/blob/master/image/%E5%85%B7%E4%BD%93%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8.png)
 
 **搜索帖子**
 
